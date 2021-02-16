@@ -1,0 +1,59 @@
+Vagrant.configure("2") do |config|
+    # Jenkins (node1)
+    config.vm.define:"node1" do |cfg|
+      cfg.vm.box = "centos/7"
+      cfg.vm.provider:virtualbox do |vb|
+          vb.name="node1"
+          vb.customize ["modifyvm", :id, "--cpus", 2]
+          vb.customize ["modifyvm", :id, "--memory", 2048]
+      end
+      cfg.vm.host_name="node1"
+      # cfg.vm.synced_folder ".", "/vagrant", type: "nfs"
+      cfg.vm.network "private_network", ip: "192.168.56.11"
+      cfg.vm.network "forwarded_port", guest: 22, host: 19211, auto_correct: false, id: "ssh"
+      cfg.vm.network "forwarded_port", guest: 8080, host: 18080
+      cfg.vm.provision "shell", path: "bash_ssh_conf_4_CentOS.sh"
+    end
+  
+    # Tomcat (node2)
+    config.vm.define:"node2" do |cfg|
+      cfg.vm.box = "centos/7"
+      cfg.vm.provider:virtualbox do |vb|
+          vb.name="node2"
+          vb.customize ["modifyvm", :id, "--cpus", 2]
+          vb.customize ["modifyvm", :id, "--memory", 2048]
+      end
+      cfg.vm.host_name="node2"
+      # cfg.vm.synced_folder ".", "/vagrant", type: "nfs"
+      cfg.vm.network "private_network", ip: "192.168.56.12"
+      cfg.vm.network "forwarded_port", guest: 22, host: 19212, auto_correct: false, id: "ssh"
+      cfg.vm.network "forwarded_port", guest: 8080, host: 28080
+      cfg.vm.provision "shell", path: "bash_ssh_conf_4_CentOS.sh"
+    end
+  
+    # Ansible Server (master)
+    config.vm.define:"master" do |cfg|
+      cfg.vm.box = "centos/7"
+      cfg.vm.provider:virtualbox do |vb|
+          vb.name="masterr"
+          vb.customize ["modifyvm", :id, "--cpus", 2]
+          vb.customize ["modifyvm", :id, "--memory", 2048]
+      end
+      cfg.vm.host_name="master"
+      # cfg.vm.synced_folder ".", "/vagrant", type: "nfs"
+      cfg.vm.network "private_network", ip: "192.168.56.10"
+      cfg.vm.network "forwarded_port", guest: 22, host: 19214, auto_correct: false, id: "ssh"
+      cfg.vm.network "forwarded_port", guest: 8080, host: 48080
+      cfg.vm.network "forwarded_port", guest: 8001, host: 48001
+      cfg.vm.network "forwarded_port", guest: 30926, host: 60000
+  
+      # cfg.vm.provision "shell", path: "bootstrap.sh"
+      # cfg.vm.provision "file", source: "Ansible_env_ready2.yml", destination: "Ansible_env_ready.yml"
+      # cfg.vm.provision "shell", inline: "ansible-playbook Ansible_env_ready.yml"
+      # cfg.vm.provision "shell", path: "add_ssh_auth.sh", privileged: false
+  
+      # cfg.vm.provision "file", source: "Ansible_ssh_conf_4_CentOS.yml", destination: "Ansible_ssh_conf_4_CentOS.yml"
+      # cfg.vm.provision "shell", inline: "ansible-playbook Ansible_ssh_conf_4_CentOS.yml"
+    end
+  end
+  

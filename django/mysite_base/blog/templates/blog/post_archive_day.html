@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{%block title%} Post Archiving_day {%endblock%}
+
+{%block content%}
+
+<div id ="content">
+
+    <h1>일별 등록된 게시물 {{ day|date:'m-d, Y' }}</h1>
+
+    <div>
+        <ul>
+        {% for post in object_list %}
+            <li>
+                {{post.modify_date|date:"Y-m-d"}}&nbsp;&nbsp;
+                <a href="{{post.get_absolute_url}}"><strong>{{post.title}}</strong></a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{%endblock%}

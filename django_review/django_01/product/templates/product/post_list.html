@@ -1,0 +1,15 @@
+{% extends 'product/base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+    <div class="col-md-8">
+        <div class="post">
+            <div class="date">
+                <p>Published : {{post.published_date}}</p>
+            </div>
+            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{post.productname}}</a></h2>
+            <p>{{post.description|linebreaksbr}}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
