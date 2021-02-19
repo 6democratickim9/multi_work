@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: hello-pod
+  labels: 
+    app: hello
+spec:
+  containers:
+    - name: hello-container
+      image: 6democratickim9/hello
+      ports: 
+        - containerPort: 8000

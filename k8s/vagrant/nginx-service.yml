@@ -1,23 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2021-02-16T07:40:24Z"
-  labels:
-    run: nginx-test
-  name: nginx-test
-  namespace: default
-  resourceVersion: "9619"
-  selfLink: /api/v1/namespaces/default/services/nginx-test
-  uid: 827397e8-4a05-400d-89fe-882aceaa0d64
+  name: hello-service
 spec:
-  clusterIP: 10.100.5.28
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
   selector:
-    run: nginx-test
-  sessionAffinity: None
-  type: NodeIP
-status:
-  loadBalancer: {}
+    app: hello
+  ports:
+    - port: 8001
+      targetPort: 8000
+  type: NodePort
+  
