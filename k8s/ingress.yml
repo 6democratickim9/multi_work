@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-sample
+  annotations:
+    nginx.ingress.kuberentes.io/rewrite-target: /
+spec:
+  rules:
+   - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-user-app-service
+            port:
+              number: 8080

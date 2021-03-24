@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-user-app
+  labels:
+    name: my-user-app
+spec:
+  containers:
+  - name: my-user-ms
+    image: edowon0623/my-user-service:1.1
+    ports:
+    - containerPort: 8088
+    volumeMounts:
+      - mountPath: /my-volume
+        name: my-hostpath
+    volumes:
+      - name: my-hostpath
+        hostPath:
+          path: /tmp
+          type: Directory
