@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: my-user-app
   labels:
-    name: my-user-app
+    app: my-user-app
 spec:
   containers:
   - name: my-user-ms
@@ -13,8 +13,8 @@ spec:
     volumeMounts:
       - mountPath: /my-volume
         name: my-hostpath
-    volumes:
-      - name: my-hostpath
-        hostPath:
-          path: /tmp
-          type: Directory
+  volumes:
+  - name: my-hostpath
+    hostPath:
+      path: /tmp
+      type: Directory
