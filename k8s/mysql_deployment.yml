@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+  labels:
+    app: mysqldb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: my
+          image: mariadb:latest
+          env: 
+          - name: M_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mydb-password
+                key: password
+          - name: MARIADB_DATABASE
+            value: mydb
+          - name: MYSQL_USER
+            value: k8suser
+          - name: MARIADB_PASSWORD
+            value: k8spass
+          - name: MARIADB_ROOT_HOST
+            value: '%'
+          ports:
+          - containerPort: 3306
+          volumeMounts:
+          - name: mysql-pv-storage
+            mountPath: /var/lib/my-data
+      volumes:
+        - name: mysql-pv-storage
+          persistentVolumeClaim:
+            claimName: my-volumeclaim

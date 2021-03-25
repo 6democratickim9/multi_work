@@ -11,10 +11,12 @@ spec:
     ports:
     - containerPort: 8088
     volumeMounts:
-      - mountPath: /my-volume
+      - mountPath: /test-volume
         name: my-hostpath
   volumes:
   - name: my-hostpath
-    hostPath:
-      path: /tmp
-      type: Directory
+    persistentVolumeClaim:
+      claimName: my-volumeclaim
+  ##  hostPath:
+ ##     path: /tmp
+##      type: Directory
