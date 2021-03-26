@@ -11,7 +11,7 @@ spec:
     ports:
     - containerPort: 8088
     volumeMounts:
-      - mountPath: /test-volume
+      - mountPath: /my-data
         name: my-hostpath
   volumes:
   - name: my-hostpath
