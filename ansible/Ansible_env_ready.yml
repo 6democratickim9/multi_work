@@ -1,0 +1,65 @@
+---
+- name: Setup for the Ansible's Environment
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Change "/etc/hosts"
+      blockinfile: |
+        dest=/etc/hosts
+        content="
+          172.20.10.10 ansible-server
+          172.20.10.11 ansible-node01
+          172.20.10.12 ansible-node02
+          172.20.10.13 ansible-node03"
+
+    - name: Change "/etc/ansible/hosts"
+      blockinfile: |
+        dest=/etc/ansible/hosts
+        content="
+          [centos]
+          ansible-node01
+          ansible-node02
+          [ubuntu]
+          ansible-node03"
+
+    - name: Install sshpass for Authentication
+      yum:
+        name: sshpass
+        state: present
+
+    - name: Install vim-enhanced
+      yum:
+        name: vim-enhanced
+        state: present
+    
+    - name: Install git
+      yum:
+        name: git
+        state: present
+    
+    - name: Install pathogen.vim
+      shell: "curl -fLo /home/vagrant/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim"
+    
+    - name: Git clone vim-ansible-yaml
+      git:
+        repo: 'https://github.com/chase/vim-ansible-yaml.git'
+        dest: /home/vagrant/.vim/bundle/vim-ansible-yaml
+    
+    - name: Configure vimrc
+      lineinfile:
+        dest: /home/vagrant/.vimrc
+        line: "{{ item }}"
+      with_items:
+        - "set number"
+        - "execute pathogen#infect()"
+        - "syntax on"
+      
+    - name: Configure Bashrc
+      lineinfile: 
+        dest: /home/vagrant/.bashrc
+        line: "{{ item }}"
+      with_items:
+        - "alias vi='vim'"
+        - "alias ans='ansible'"
+        - "alias anp='ansible-playbook'"

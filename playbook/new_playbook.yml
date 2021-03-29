@@ -1,0 +1,10 @@
+---
+- name: Ansible_vim_test
+  hosts: localhost
+  tasks:
+    - name: Add Ansible hosts
+      blockinfile:
+        path: /etc/ansible/hosts
+          block:|
+            [mygroup]
+            172.20.10.11
