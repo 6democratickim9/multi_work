@@ -5,31 +5,41 @@
   become: yes
   
   tasks:
-    - name: Install docker
-      shell: curl https://get.docker.com | sh
+    - name: install epel-release
+      yum: name=epel-release state=present
     - name: install pip for docker-py
-      shell: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      yum: name=python-pip
     - name: install docker-py
       pip: name=docker
-    - name: run&pull docker image  
+    - name: docker start
+      command: service docker start
+    - name: pull&run docker image  
       docker_container:
         name: service
         image: edowon0623/my-user-service:1.1
         detach: yes
         ports: 8088:8088
 
-
+---
 - name: install docker Ubuntu
   hosts: ubuntu
   gather_facts: no
   become: yes
-
   tasks:
-    - name: Install docker
-      shell: curl https://get.docker.com | sh
+    - name: apt upgrade
+      apt: 
+        upgrade: yes
+        update_cache: yes
+    - name: kernel upgrade
+      apt: name='*' state=latest exclude='kernel*'
+    - name: install pip for docker-py
+      apt: name=python-pip
+    - name: install docker-py
+      pip: name=docker          
     - name: run&pull docker image  
       docker_container:
         name: service
         image: edowon0623/my-user-service:1.1
+        command: run
         detach: yes
         ports: 8088:8088
