@@ -1,9 +1,0 @@
- - name: install nginx on centos
-  3   hosts: centos
-  4   gather_facts: no
-  5   become: yes
-  6   tasks:
-  7     - name: install epel-release
-  8       yum: name=epel-release state=absent
-    - name: remove nginx web server
-        yum: name=nginx state=absent

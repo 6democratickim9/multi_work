@@ -1,0 +1,27 @@
+ ---
+ - name: install nginx on centos
+     hosts: centos
+     gather_facts: no
+     become: yes
+     tasks:
+    - name: install epel-release
+        yum: name=epel-release state=absent
+    - name: remove nginx web server
+        yum: name=nginx state=absent
+
+- name: install nginx on ubuntu
+  hosts: ubuntu
+  gather_facts: no
+  become: yes 
+  tasks:
+    - name: remove nginx web server
+      apt: 
+        name: nginx 
+        state: absent
+    - name: remove useless packages from cache
+      apt: 
+        autoclean: yes
+    - name: remove dependencies that no longer required
+      apt: 
+        autoremove: yes
+
