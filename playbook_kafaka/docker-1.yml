@@ -1,0 +1,25 @@
+---
+- name: install docker
+  hosts: centos
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: install epel-release
+      yum: name=epel-release state=latest
+    - name: Install docker
+      yum: name=docker
+    - name: Docker run
+      systemd: name=docker state=started
+    - name: Yum update
+      yum: update_cache=yes
+    - name: ddd
+      yum: name=python-pip
+    - name: docker-py
+      pip: name=docker
+    - name: create data container
+      docker_container:
+          name: service
+          image: edowon0623/my-user-service:1.1
+          detach: yes
+          ports: 8088:8088

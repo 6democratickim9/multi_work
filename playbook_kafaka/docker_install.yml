@@ -1,0 +1,31 @@
+---
+- name: install docker CentOS
+  hosts: centos
+  gather_facts: no
+  become: yes
+    
+  tasks:
+    - name: Pull image
+      community.docker.docker_image:
+        name: vagrant/centos-7
+        source: pull
+        platform: amd64
+
+
+
+
+        
+    - name: start a container with a command
+      community.docker.docker_container:
+        name: my-user-service
+        image: edowon0623/my-user-service:1.1
+        command: [docker,run,-d,-p]
+        ports:
+        - "8080:8080"
+
+
+
+
+    - name: Install docker
+      shell: curl https://get.docker.com | sh
+    
