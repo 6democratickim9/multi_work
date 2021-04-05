@@ -1,17 +1,13 @@
+import flask
 from flask import jsonify,request
 from datetime import datetime
 from flask_restful import Resource,reqparse,Api
 from flask import Flask
-from flask_mysqldb import MySQL
 
 import uuid
 import flask_restful
 import mariadb
-import sys
-import pymysql
 import json
-
-
 
 
 app = Flask(__name__)
@@ -34,8 +30,8 @@ class Order(flask_restful.Resource):
     def get(self, user_id):
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        sql = "select * from orders where user_id=? order by id desc"
-        cursor.execute(sql,('user_id')) #최신 데이터를 가져와서 반환
+        sql = "select * from mydb where user_id=? order by id desc"
+        cursor.execute(sql,['user_id']) #최신 데이터를 가져와서 반환
         result_set = cursor.fetchall()
 
         json_data = []
@@ -58,10 +54,15 @@ class Order(flask_restful.Resource):
         json_data['order_id'] = str(uuid.uuid4())
         json_data['order_at'] = str(datetime.today())
 
-        coffee_name = json_data['coffee_name']
-        coffee_price = json_data['coffee_price']
-        coffee_qty = json_data['coffee_qty'] # 얻어올 파라미터 3개
-        return jsonify(json_data),201
+        response = jsonify(json_data)
+        response.status_code =200
+        return response
+
+        #coffee_name = json_data['coffee_name']
+        #coffee_price = json_data['coffee_price']
+        #coffee_qty = json_data['coffee_qty'] # 얻어올 파라미터 3개
+        
+        #return jsonify(json_data),201
         #{'coffee_name': coffee_name, 'coffee_price':coffee_price},201
 
 class OrderDetail(flask_restful.Resource):
