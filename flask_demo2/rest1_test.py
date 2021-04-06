@@ -1,8 +1,8 @@
-import unittest
+import unittest #중요한 부분. 잘 만들었는지 판단할 수 있는 기준. 단위테스트를 위한 코드
 import json
 import rest1
 
-class FlaskTest(unittest.TestCase):
+class FlaskTest(unittest.TestCase):#사용자 요구사항을 위해 만든것
     def setUp(self): # db연동 등등의 작업
         rest1.app.testing = True
         self.client = rest1.app.test_client()
@@ -12,7 +12,8 @@ class FlaskTest(unittest.TestCase):
     # 결과로 12나와야됨
 
 
-    def test_index(self): #setup을 위한 준비작업. 티어다운을 통해 작업마무리(옵션임)
+    def test_index(self): 
+        #setup을 위한 준비작업. 티어다운을 통해 작업마무리(옵션임)
         response = self.client.get('/')
         self.assertEqual(response.status_code,200)
         # self.assertEqual(call, 12) #실제 값이 12면 성공
