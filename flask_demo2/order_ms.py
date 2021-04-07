@@ -3,10 +3,9 @@ from flask import jsonify,request
 from datetime import datetime
 from flask_restful import Resource,reqparse,Api
 from flask import Flask
-
+import pymysql
 import uuid
 import flask_restful
-import mariadb
 import json
 
 # 1. KafkaProducer() -> 생성자에 추가
@@ -19,11 +18,11 @@ app.config["DEBUG"] = True
 api = flask_restful.Api(app)
 
 config = {
-    'host':'127.0.0.1',
+    'host':'172.19.0.3',
     'port': 3306,
     'user': 'root',
-    'password': '1234',
-    'database': 'mysql'
+    'password': '',
+    'database': 'mydb'
 }
 
 @app.route('/order-ms')
@@ -32,15 +31,15 @@ def index():
 
 class Order(flask_restful.Resource):
     def __init__(self):
-        self.conn = mariadb.connect(**config)
+        self.conn = pymysql.connect(**config)
         self.cursor = self.conn.cursor()
         # 1. KafkaProducer() -> 생성자에 추가
-        self.producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
+        self.producer = KafkaProducer(bootstrap_servers=['172.19.0.101:9092'])
         
 
 
     def get(self, user_id):
-        sql = "select * from mydb where user_id=? order by id desc"
+        sql = '''select user_id, order_id, coffee_name, coffee_price, coffee_qty, ordered_at from orders where user_id=%s order by id desc'''
         self.cursor.execute(sql,['user_id']) #최신 데이터를 가져와서 반환
         result_set = self.cursor.fetchall()
 
@@ -73,8 +72,8 @@ class Order(flask_restful.Resource):
         json_data['ordered_at'] = str(datetime.today())
 
         #DB 삽입
-        sql = '''INSERT INTO mydb(user_id, order_id, coffee_name, coffee_price, coffee_qty, ordered_at)
-                    VALUES(?,?,?,?,?,?)
+        sql = '''INSERT INTO orders(user_id, order_id, coffee_name, coffee_price, coffee_qty, ordered_at)
+                    VALUES(%s,%s,%s,%s,%s,%s)
         '''
         self.cursor.execute(sql,[user_id,
                                 json_data['order_id'],

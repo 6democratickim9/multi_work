@@ -7,9 +7,9 @@ from flask_restful import Resource,reqparse,Api
 
 import uuid
 import flask_restful
-import mariadb
+#import mariadb
 import json
-import mariadb
+import pymysql
 
 
 app = Flask(__name__)
@@ -17,16 +17,16 @@ app = Flask(__name__)
 api = flask_restful.Api(app)
 
 config = {
-    'host':'127.0.0.1',
+    'host':'172.17.0.2', #도커 내의 네트워크
     'port':3306, 
     'user':'root',
-    'password':'1234', 
-    'database':'mysql'
+    'password':'', 
+    'database':'mydb'
 }
 
 
 consumer = KafkaConsumer('new_orders',
-                        bootstrap_servers=["localhost:9092"],
+                        bootstrap_servers=["localhost:16000"],
                         auto_offset_reset='earliest',
                         enable_auto_commit=True,
                         auto_commit_interval_ms=1000,

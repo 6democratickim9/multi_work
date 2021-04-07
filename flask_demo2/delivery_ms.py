@@ -6,7 +6,7 @@ from flask import Flask
 
 import uuid
 import flask_restful
-import mariadb
+import pymysql
 import json
 
 # 1. KafkaProducer() -> 생성자에 추가
@@ -19,7 +19,7 @@ app.config["DEBUG"] = True
 api = flask_restful.Api(app)
 
 config = {
-    'host':'127.0.0.1',
+    'host':'172.19.0.3', #현재 가지고있는 네트워크 ip주소 참고하고 수정하기 -> mydb
     'port': 3306,
     'user': 'root',
     'password': '1234',
@@ -32,7 +32,7 @@ def index():
 
 class Delivery(flask_restful.Resource):
     def __init__(self):
-        self.conn = mariadb.connect(**config)
+        self.conn = pymysql.connect(**config)
         self.cursor = self.conn.cursor()
    
     def get(self):
@@ -66,14 +66,14 @@ class Delivery(flask_restful.Resource):
 
 class DeliveryStatus(flask_restful.Resource):
     def __init__(self):
-        self.conn = mariadb.connect(**config)
+        self.conn = pymysql.connect(**config)
         self.cursor = self.conn.cursor()
 
     def put(self, delivery_id):
         json_data = request.get_json()
         status = json_data['status']
         #DB 삽입
-        sql = 'UPDATE delivery_status SET status=? WHERE delivery_id=?'
+        sql = 'UPDATE delivery_status SET status=%s WHERE delivery_id=?'
         self.cursor.execute(sql,[status,delivery_id])
         self.conn.commit()
         

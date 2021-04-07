@@ -3,55 +3,43 @@ import time
 import json
 import threading
 from datetime import datetime
-
+import pymysql
 
 import uuid
-import flask_restful
-import mariadb
 import json
-import mariadb
 
 
 
-config = {
-    'host':'127.0.0.1',
-    'port':3306, 
-    'user':'root',
-    'password':'1234', 
-    'database':'mysql'
-}
 
 
 consumer = KafkaConsumer('new_orders',
-                        bootstrap_servers=["localhost:9092"],
+                        bootstrap_servers=["172.19.0.101:9092"],
                         auto_offset_reset='earliest',
                         enable_auto_commit=True,
                         auto_commit_interval_ms=1000,
                         consumer_timeout_ms=1000
                         )
 
+config = {
+    'host':'172.19.0.3/24',
+    'port':3306, 
+    'user':'root',
+    'password':'', 
+    'database':'mydb'
+}
+
 # kafka-client로 작업했었음
 
-start = time.time()
 
-#for message in consumer:
-#    topic = message.topic
-#    partition = message.partition
- #   offset = message.offset
-  #  value = message.value
-   # print("Topic:{},Partition:{}, Offset:{}, Value:{}".format(topic,partition,
-    #offset,value))
-
-
-conn = mariadb.connect(**config)
+conn = pymysql.connect(**config)
 cursor = conn.cursor()
 
 sql = '''INSERT INTO delivery_status(delivery_id, order_json, status)
-        VALUES(?,?,?)'''
+        VALUES(%s, %s, %s)'''
 
 def fetch_latest_orders(next_call_in):
 
-    next_call_in += 5
+    next_call_in += 30
     batch = consumer.poll(timeout_ms=100)
     if len(batch) > 0:
         for message in list(batch.values())[0]:
