@@ -12,9 +12,8 @@ producer = KafkaProducer(acks=0,
                 value_serializer=lambda x : dumps(x).encode('utf-8'))
 
 start = time.time()
-for i in range(10):
-    data = {'schema':{"type":"struct","fields":[{"type":"int32","field":"id"},{"type":"string","field":"user_id"},{"type":"string","field":"pwd"},{"type":"string","field":"NAME"},{"type":"int64","name":"org.apache.kafka.connect.data.Timestamp","version":1,"field":"created_at"}],"name":"users"},"payload":{"id":10,"user_id":"new_test10","pwd":"new_pwd10","NAME":"NEW TEST USER10","created_at":161834903813}}
-    producer.send('my_topic_users', value=data)
-    producer.flush()
+data = {"schema":{"type":"struct","fields":[{"type":"int32","field":"id"},{"type":"string","field":"user_id"},{"type":"string","field":"NAME"}],"name":"users"},"payload":{"id":114,"user_id":"6democratickim9","NAME":"minjju"}}
+producer.send('minju_exam_topic_users', value=data)
+producer.flush()
 
 print("Done. Elapsed time: ", (time.time() - start))
